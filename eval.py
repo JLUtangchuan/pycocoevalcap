@@ -8,22 +8,22 @@ from .spice.spice import Spice
 
 
 class COCOEvalCap:
-    def __init__(self, coco, cocoRes):
+    def __init__(self, coco, cocoRes, mid):
         self.evalImgs = []
         self.eval = {}
         self.imgToEval = {}
         self.coco = coco
         self.cocoRes = cocoRes
-        self.params = {'image_id': coco.getImgIds()}
+        self.imgIds = mid
 
     def evaluate(self):
-        imgIds = self.params['image_id']
+        imgIds = self.imgIds
         # imgIds = self.coco.getImgIds()
         gts = {}
         res = {}
         for imgId in imgIds:
-            gts[imgId] = self.coco.imgToAnns[imgId]
-            res[imgId] = self.cocoRes.imgToAnns[imgId]
+            gts[imgId] = self.coco[imgId]
+            res[imgId] = self.cocoRes[imgId]
 
         # =================================================
         # Set up scorers
@@ -41,8 +41,8 @@ class COCOEvalCap:
             (Bleu(4), ["Bleu_1", "Bleu_2", "Bleu_3", "Bleu_4"]),
             (Meteor(),"METEOR"),
             (Rouge(), "ROUGE_L"),
-            (Cider(), "CIDEr"),
-            (Spice(), "SPICE")
+            (Cider(), "CIDEr")
+            # (Spice(), "SPICE")
         ]
 
         # =================================================
